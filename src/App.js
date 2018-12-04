@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <div className="App container mt-3">
         <header className="App-header">
-          <GenderSelector />
+      {/* <GenderSelector /> */}
           <SymptomSelector />
         </header>
       </div>

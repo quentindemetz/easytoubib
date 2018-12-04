@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
+import Select from 'react-select';
 
 import { symptoms } from '../medicalData';
 import diagnose from '../reducers/diagnostic';
 import SymptomList from './symptom-list'
 import SicknessList from './sickness-list'
 
-const DEFAULT_DROPDOWN = [symptoms, "Tous les symptômes"]
+const DEFAULT_DROPDOWN = {
+  options: makeOptions(symptoms),
+  label: "Tous les symptômes",
+}
+
+function makeOptions(symptoms) {
+  return symptoms.map(s => ({label: s, value: s}));
+}
 
 class SymptomSelector extends Component {
   render() {
     return (
       <form>
-        <div>
+        <div className="mb-3">
           <h3>Symptômes</h3>
           <SymptomList
             symptoms={this.state.symptoms}
@@ -20,17 +28,16 @@ class SymptomSelector extends Component {
         </div>
 
         { this.state.dropdowns.map(d =>
-          <div className="form-group" key={d[1]}>
-            <label className="mr-2">
-              {d[1]}
+          <div className="form-group" key={d.label}>
+            <label className="mr-2 d-none d-sm-none d-md-block">
+              {d.label}
             </label>
-            <select onChange={this.addSymptom}>
-              {d[0].map(s => 
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              )}
-            </select>
+            <Select
+              value={null}
+              onChange={this.addSymptom}
+              options={d.options}
+              placeholder={d.label}
+            />
           </div>
         )}
 
@@ -57,20 +64,28 @@ class SymptomSelector extends Component {
     });
   }
 
-  addSymptom = (event) => {
-    let symptom = event.target.value;
-    event.target.value = null;
+  addSymptom = (option) => {
+    let symptom = option.value;
     this.setState((state, props) => {
       var newSymptoms = this.state.symptoms.concat([symptom]);
       return this.cascadeUpdateState(newSymptoms);
     });
   }
 
-  cascadeUpdateState = (symptoms) => {
-    var {lSicknesses, dSymptoms} = diagnose(symptoms);
-    var dropdowns = (dSymptoms.length > 0) ? [[dSymptoms, "Symptômes discriminants"], DEFAULT_DROPDOWN] : [DEFAULT_DROPDOWN]
+  cascadeUpdateState = (mySymptoms) => {
+    var {lSicknesses, dSymptoms} = diagnose(mySymptoms);
+    var dDropdown = {
+      label: "Symptômes discriminants",
+      options: makeOptions(dSymptoms)
+    }
+
+    var oldDropdown = {
+      label: "Tous les symptômes",
+      options: makeOptions(symptoms.filter(s => (mySymptoms.indexOf(s) === -1)))
+   }
+    var dropdowns = (dSymptoms.length > 0) ? [dDropdown, oldDropdown] : [oldDropdown]
     return {
-      symptoms: symptoms,
+      symptoms: mySymptoms,
       likelySicknesses: lSicknesses,
       decidingSymptoms: dSymptoms,
       dropdowns: dropdowns

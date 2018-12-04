@@ -5,7 +5,7 @@ import SymptomItem from './symptom-item.js'
 class SymptomList extends Component {
   render() {
     return (
-      <div>
+      <div className="list-group">
         {this.props.symptoms.map(s =>
           <SymptomItem
             symptoms={this.props.symptoms}
