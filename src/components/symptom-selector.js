@@ -76,12 +76,12 @@ class SymptomSelector extends Component {
     var {lSicknesses, dSymptoms} = diagnose(mySymptoms);
     var dDropdown = {
       label: "Symptômes discriminants",
-      options: makeOptions(dSymptoms)
+      options: dSymptoms
     }
 
     var oldDropdown = {
       label: "Tous les symptômes",
-      options: makeOptions(symptoms.filter(s => (mySymptoms.indexOf(s) === -1)))
+      options: makeOptions(symptoms.filter(s => (mySymptoms.indexOf(s.label) === -1)))
    }
     var dropdowns = (dSymptoms.length > 0) ? [dDropdown, oldDropdown] : [oldDropdown]
     return {

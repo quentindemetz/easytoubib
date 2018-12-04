@@ -6,26 +6,35 @@ function diagnose(mySymptoms) {
     var prob = 0;
     mySymptoms.forEach(function(symptom) {
       if (data[sickness].has(symptom)) prob += 1;
-      else prob -= 1000;
     })
-    prob /= data[sickness].size;
-    return [sickness, prob]
+    return {
+      label: sickness,
+      score: prob/data[sickness].size,
+      matches: prob,
+      total: data[sickness].size,
+    };
   });
 
   lSicknesses = lSicknesses.sort(comparator).reverse();
-  lSicknesses = lSicknesses.filter(e => e[1] > 0).map(e => e[0]);
+  lSicknesses = lSicknesses.filter(e => e.matches > 0);
 
   var dSymptoms = symptoms.map(function(symptom) {
-    if (mySymptoms.indexOf(symptom) > -1) return [symptom, 1];
+    if (mySymptoms.indexOf(symptom) > -1) return {
+      label: symptom,
+      score: 1,
+    };
     var count = 0;
     lSicknesses.forEach(function(sickness) {
-      if (data[sickness].has(symptom)) count += 1;
+      if (data[sickness.label].has(symptom)) count += 1;
     });
-    return [symptom, Math.abs(count/lSicknesses.length - 1)];
+    return {
+      label: symptom,
+      score: Math.abs(count/lSicknesses.length - 1)
+    }
   });
 
   dSymptoms = dSymptoms.sort(comparator);
-  dSymptoms = dSymptoms.filter(e => e[1] < 1).map(e => e[0]);
+  dSymptoms = dSymptoms.filter(e => e.score < 1);
   return {
     lSicknesses,
     dSymptoms
@@ -33,7 +42,7 @@ function diagnose(mySymptoms) {
 }
 
 function comparator(a, b) {
-  if (a[1] < b[1]) return -1;
-  if (a[1] > b[1]) return 1;
+  if (a.score < b.score) return -1;
+  if (a.score > b.score) return 1;
   return 0;
 }

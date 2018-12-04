@@ -9,7 +9,7 @@ class SicknessList extends Component {
         <h3>Maladies</h3>
         <div className="list-group">
           {this.props.sicknesses.map(s =>
-            <SicknessItem sickness={s} key={s} />
+            <SicknessItem sickness={s} key={s.label} />
           )}
         </div>
       </div>
