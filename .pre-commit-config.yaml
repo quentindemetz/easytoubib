@@ -1,0 +1,18 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: do_not_commit
+        name: do_not_commit
+        language: pygrep
+        entry: DO\ NOT\ COMMIT
+-   repo: git://github.com/pre-commit/pre-commit-hooks
+    rev: v2.0.0
+    hooks:
+      -   id: check-added-large-files
+          exclude: /package-lock.json/
+      -   id: check-byte-order-marker
+      -   id: check-merge-conflict
+      -   id: check-yaml
+          args: [--unsafe]
+      -   id: end-of-file-fixer
+      -   id: trailing-whitespace
