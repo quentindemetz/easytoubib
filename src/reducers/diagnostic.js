@@ -21,6 +21,7 @@ function diagnose(mySymptoms) {
   var dSymptoms = symptoms.map(function(symptom) {
     if (mySymptoms.indexOf(symptom) !== -1) return {
       label: symptom,
+      value: symptom,
       score: 1,
     };
     var count = 0;
@@ -29,6 +30,7 @@ function diagnose(mySymptoms) {
     });
     return {
       label: symptom,
+      value: symptom,
       matches: count,
       score: Math.abs(count/lSicknesses.length - 1)
     }
@@ -45,5 +47,5 @@ function diagnose(mySymptoms) {
 function comparator(a, b) {
   if (a.severe) return 1;
   if (b.severe) return -1;
-  return a.score - b.score;
+  return 100 * (a.score - b.score) + (a.matches - b.matches);
 }
