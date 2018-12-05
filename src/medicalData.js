@@ -1,10 +1,9 @@
 import rawData from './gsheet-data.js';
 
-export const sicknesses = rawData.sicknesses;
-export const symptoms = rawData.symptoms;
-var d = {};
+export const sicknesses = rawData.sicknesses.sort();
+export const symptoms = rawData.symptoms.sort();
 sicknesses.forEach(function(s) {
-  d[s] = new Set(rawData.data[s]);
+  rawData.data[s].symptoms = new Set(rawData.data[s].symptoms);
 });
 
-export const data = d;
+export const data = rawData.data;

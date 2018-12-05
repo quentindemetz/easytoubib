@@ -19,15 +19,7 @@ class SymptomSelector extends Component {
   render() {
     return (
       <form>
-        <div className="mb-3">
-          <h3>Symptômes</h3>
-          <SymptomList
-            symptoms={this.state.symptoms}
-            removeSymptom={this.removeSymptom}
-          />
-        </div>
-
-        { this.state.dropdowns.map(d =>
+        {this.state.dropdowns.map(d =>
           <div className="form-group" key={d.label}>
             <label className="mr-2 d-none d-sm-none d-md-block">
               {d.label}
@@ -40,6 +32,11 @@ class SymptomSelector extends Component {
             />
           </div>
         )}
+
+        <SymptomList
+          symptoms={this.state.symptoms}
+          removeSymptom={this.removeSymptom}
+        />
 
         <SicknessList sicknesses={this.state.likelySicknesses} />
       </form>
@@ -81,7 +78,7 @@ class SymptomSelector extends Component {
 
     var oldDropdown = {
       label: "Tous les symptômes",
-      options: makeOptions(symptoms.filter(s => (mySymptoms.indexOf(s.label) === -1)))
+      options: makeOptions(symptoms.filter(s => (mySymptoms.indexOf(s) === -1)))
    }
     var dropdowns = (dSymptoms.length > 0) ? [dDropdown, oldDropdown] : [oldDropdown]
     return {
